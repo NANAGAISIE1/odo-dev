@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Review Settings Form View -->
+    <record id="review_settings_form_view" model="ir.ui.view">
+        <field name="name">review.settings.form</field>
+        <field name="model">review.settings</field>
+        <field name="arch" type="xml">
+            <form string="Review Settings" class="oe_form_configuration">
+                <header>
+                    <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel" special="cancel"/>
+                </header>
+                <sheet>
+                    <div class="o_setting_container">
+                        <div class="o_setting_box" id="review_moderation_settings">
+                            <div class="o_setting_left_pane">
+                                <field name="require_moderation"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="require_moderation"/>
+                                <div class="text-muted">
+                                    All reviews require moderation before publishing
+                                </div>
+                                <div class="content-group mt16" invisible="not require_moderation">
+                                    <div class="row">
+                                        <label for="auto_approve_verified_purchases" class="col-3 o_light_label"/>
+                                        <field name="auto_approve_verified_purchases"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="min_rating_to_publish" class="col-3 o_light_label"/>
+                                        <field name="min_rating_to_publish"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_anonymous_reviews"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="allow_anonymous_reviews"/>
+                                <div class="text-muted">
+                                    Allow users to submit reviews without registration
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="notify_on_new_review"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="notify_on_new_review"/>
+                                <div class="text-muted">
+                                    Send email notifications when new reviews are submitted
+                                </div>
+                                <div class="content-group mt16" invisible="not notify_on_new_review">
+                                    <div class="row">
+                                        <label for="notification_email" class="col-3 o_light_label"/>
+                                        <field name="notification_email" class="col-9" placeholder="admin@example.com"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="show_reviewer_name"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="show_reviewer_name"/>
+                                <div class="text-muted">
+                                    Display reviewer names on website
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="allow_review_voting"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="allow_review_voting"/>
+                                <div class="text-muted">
+                                    Allow visitors to vote on review helpfulness
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="reviews_per_page"/>
+                                <div class="text-muted">
+                                    Number of reviews to display per page on website
+                                </div>
+                                <div class="content-group mt16">
+                                    <div class="row">
+                                        <label for="reviews_per_page" class="col-3 o_light_label"/>
+                                        <field name="reviews_per_page" class="col-2"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="review_expiry_days"/>
+                                <div class="text-muted">
+                                    Days after which reviews are considered expired (0 = never)
+                                </div>
+                                <div class="content-group mt16">
+                                    <div class="row">
+                                        <label for="review_expiry_days" class="col-3 o_light_label"/>
+                                        <field name="review_expiry_days" class="col-2"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="max_reviews_per_product_per_user"/>
+                                <div class="text-muted">
+                                    Maximum number of reviews a user can submit per product
+                                </div>
+                                <div class="content-group mt16">
+                                    <div class="row">
+                                        <label for="max_reviews_per_product_per_user" class="col-3 o_light_label"/>
+                                        <field name="max_reviews_per_product_per_user" class="col-2"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Review Settings Action -->
+    <record id="action_review_settings" model="ir.actions.act_window">
+        <field name="name">Review Settings</field>
+        <field name="res_model">review.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'review_feedback_system'}</field>
+    </record>
+</odoo>

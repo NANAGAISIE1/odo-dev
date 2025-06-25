@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Review Analytics Tree View -->
+    <record id="review_analytics_tree_view" model="ir.ui.view">
+        <field name="name">review.analytics.tree</field>
+        <field name="model">review.analytics</field>
+        <field name="arch" type="xml">
+            <tree string="Review Analytics" create="false" edit="false" delete="false">
+                <field name="product_id" />
+                <field name="category_id" />
+                <field name="total_reviews" />
+                <field name="average_rating" widget="float" digits="[16,2]" />
+                <field name="five_star_count" />
+                <field name="four_star_count" />
+                <field name="three_star_count" />
+                <field name="two_star_count" />
+                <field name="one_star_count" />
+                <field name="published_reviews" />
+                <field name="verified_reviews" />
+                <field name="total_helpfulness_votes" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Review Analytics Search View -->
+    <record id="review_analytics_search_view" model="ir.ui.view">
+        <field name="name">review.analytics.search</field>
+        <field name="model">review.analytics</field>
+        <field name="arch" type="xml">
+            <search string="Review Analytics">
+                <field name="product_id" />
+                <field name="category_id" />
+                <separator />
+                <filter name="high_rated" string="High Rated (4+ stars)"
+                    domain="[('average_rating', '&gt;=', 4)]" />
+                <filter name="low_rated" string="Low Rated (&lt;3 stars)"
+                    domain="[('average_rating', '&lt;', 3)]" />
+                <filter name="many_reviews" string="Many Reviews (10+)"
+                    domain="[('total_reviews', '&gt;=', 10)]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_product" string="Product"
+                        context="{'group_by': 'product_id'}" />
+                    <filter name="group_category" string="Category"
+                        context="{'group_by': 'category_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Review Analytics Graph View -->
+    <record id="review_analytics_graph_view" model="ir.ui.view">
+        <field name="name">review.analytics.graph</field>
+        <field name="model">review.analytics</field>
+        <field name="arch" type="xml">
+            <graph string="Review Analytics" type="bar">
+                <field name="product_id" type="row" />
+                <field name="total_reviews" type="measure" />
+                <field name="average_rating" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Review Analytics Pivot View -->
+    <record id="review_analytics_pivot_view" model="ir.ui.view">
+        <field name="name">review.analytics.pivot</field>
+        <field name="model">review.analytics</field>
+        <field name="arch" type="xml">
+            <pivot string="Review Analytics">
+                <field name="product_id" type="row" />
+                <field name="category_id" type="col" />
+                <field name="total_reviews" type="measure" />
+                <field name="average_rating" type="measure" />
+                <field name="published_reviews" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Review Analytics Dashboard -->
+    <record id="review_analytics_dashboard_view" model="ir.ui.view">
+        <field name="name">review.analytics.dashboard</field>
+        <field name="model">review.analytics</field>
+        <field name="arch" type="xml">
+            <dashboard>
+                <view type="graph" ref="review_analytics_graph_view" />
+                <group string="Review Statistics">
+                    <aggregate name="total_reviews" field="total_reviews"
+                        string="Total Reviews" widget="integer" />
+                    <aggregate name="avg_rating" field="average_rating"
+                        string="Average Rating" widget="float" />
+                    <aggregate name="published_count" field="published_reviews"
+                        string="Published Reviews" widget="integer" />
+                    <aggregate name="verified_count" field="verified_reviews"
+                        string="Verified Reviews" widget="integer" />
+                </group>
+                <view type="pivot" ref="review_analytics_pivot_view" />
+            </dashboard>
+        </field>
+    </record>
+
+    <!-- Review Analytics Action -->
+    <record id="action_review_analytics" model="ir.actions.act_window">
+        <field name="name">Review Analytics</field>
+        <field name="res_model">review.analytics</field>
+        <field name="view_mode">tree,graph,pivot,dashboard</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No analytics data available yet!
+            </p>
+            <p>
+                Analytics will be generated automatically as reviews are created.
+            </p>
+        </field>
+    </record>
+</odoo>

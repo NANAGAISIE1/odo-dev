@@ -1,0 +1,62 @@
+<odoo>
+    <record id="view_business_form" model="ir.ui.view">
+        <field name="name">business.form</field>
+        <field name="model">business_core.business</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="General Info">
+                        <field name="name" />
+                        <field name="abbrev" />
+                        <field name="business_type" />
+                        <field name="industry" />
+                        <field name="summary" />
+                    </group>
+
+                    <group string="Contact Info">
+                        <field name="email" />
+                        <field name="phone" />
+                        <field name="country" />
+                        <field name="address" />
+                    </group>
+
+                    <group string="Registration">
+                        <field name="business_idtype" />
+                        <field name="business_idnumber" />
+                        <field name="business_license" />
+                        <field name="is_verified" />
+                    </group>
+
+                    <group string="Subscription">
+                        <field name="subscription_id" />
+                        <field name="uid" />
+                    </group>
+
+                    <group string="Media">
+                        <field name="logo" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_business_tree" model="ir.ui.view">
+        <field name="name">business.tree</field>
+        <field name="model">business_core.business</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="abbrev" />
+                <field name="industry" />
+                <field name="country" />
+                <field name="is_verified" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_business" model="ir.actions.act_window">
+        <field name="name">Businesses</field>
+        <field name="res_model">business_core.business</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

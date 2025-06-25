@@ -1,0 +1,47 @@
+<odoo>
+    <!-- FORM VIEW -->
+    <record id="view_business_product_form" model="ir.ui.view">
+        <field name="name">business_product.form</field>
+        <field name="model">business_core.business_product</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="instances" />
+                        <field name="features" />
+                        <field name="date_added" />
+                        <field name="last_update" />
+                        <field name="category" />
+                        <field name="status" />
+                        <field name="subscription_id" />
+                        <field name="product_id" />
+                        <field name="business_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW -->
+    <record id="view_business_product_tree" model="ir.ui.view">
+        <field name="name">business_product.tree</field>
+        <field name="model">business_core.business_product</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="category" />
+                <field name="status" />
+                <field name="instances" />
+                <field name="business_id" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_business_product" model="ir.actions.act_window">
+        <field name="name">Business Products</field>
+        <field name="res_model">business_core.business_product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

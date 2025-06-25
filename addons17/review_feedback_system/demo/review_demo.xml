@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Review Categories -->
+    <record id="demo_category_electronics" model="review.category">
+        <field name="name">Electronics</field>
+        <field name="description">Reviews for electronic products and gadgets</field>
+        <field name="website_published">True</field>
+        <field name="active">True</field>
+        <field name="website_sequence">10</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="demo_category_services" model="review.category">
+        <field name="name">Services</field>
+        <field name="description">Reviews for various services</field>
+        <field name="website_published">True</field>
+        <field name="active">True</field>
+        <field name="website_sequence">20</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="demo_category_software" model="review.category">
+        <field name="name">Software</field>
+        <field name="description">Reviews for software and applications</field>
+        <field name="website_published">True</field>
+        <field name="active">True</field>
+        <field name="website_sequence">30</field>
+        <field name="color">3</field>
+    </record>
+
+    <!-- Demo Products (if not existing) -->
+    <record id="demo_product_laptop" model="product.template">
+        <field name="name">Demo Laptop</field>
+        <field name="type">consu</field>
+        <field name="sale_ok">True</field>
+        <field name="list_price">999.00</field>
+        <field name="description">High-performance laptop for professionals</field>
+    </record>
+
+    <record id="demo_product_smartphone" model="product.template">
+        <field name="name">Demo Smartphone</field>
+        <field name="type">consu</field>
+        <field name="sale_ok">True</field>
+        <field name="list_price">599.00</field>
+        <field name="description">Latest smartphone with advanced features</field>
+    </record>
+
+    <record id="demo_product_software" model="product.template">
+        <field name="name">Demo Software License</field>
+        <field name="type">service</field>
+        <field name="sale_ok">True</field>
+        <field name="list_price">199.00</field>
+        <field name="description">Professional software license</field>
+    </record>
+
+    <!-- Demo Partners (Customers) -->
+    <record id="demo_partner_john" model="res.partner">
+        <field name="name">John Smith</field>
+        <field name="email">john.smith@example.com</field>
+        <field name="is_company">False</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <record id="demo_partner_jane" model="res.partner">
+        <field name="name">Jane Doe</field>
+        <field name="email">jane.doe@example.com</field>
+        <field name="is_company">False</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <record id="demo_partner_bob" model="res.partner">
+        <field name="name">Bob Johnson</field>
+        <field name="email">bob.johnson@example.com</field>
+        <field name="is_company">False</field>
+        <field name="customer_rank">1</field>
+    </record>
+
+    <!-- Demo Reviews -->
+    <record id="demo_review_1" model="review.feedback">
+        <field name="title">Excellent laptop for work</field>
+        <field name="content">I've been using this laptop for 3 months now and it's been fantastic.
+            The performance is excellent, battery life is great, and the build quality is solid.
+            Highly recommended for professionals who need a reliable machine.</field>
+        <field name="rating">5</field>
+        <field name="partner_id" ref="demo_partner_john" />
+        <field name="customer_name">John Smith</field>
+        <field name="customer_email">john.smith@example.com</field>
+        <field name="product_id" ref="demo_product_laptop" />
+        <field name="category_id" ref="demo_category_electronics" />
+        <field name="pros">Fast performance, great battery life, solid build quality</field>
+        <field name="cons">A bit heavy for travel</field>
+        <field name="recommend">True</field>
+        <field name="verified_purchase">True</field>
+        <field name="state">approved</field>
+        <field name="website_published">True</field>
+        <field name="helpfulness_count">15</field>
+        <field name="total_votes">18</field>
+    </record>
+
+    <record id="demo_review_2" model="review.feedback">
+        <field name="title">Good smartphone with minor issues</field>
+        <field name="content">Overall, this is a good smartphone with excellent camera quality and
+            smooth performance. However, I've noticed the battery drains faster than expected during
+            heavy usage. The design is sleek and modern.</field>
+        <field name="rating">4</field>
+        <field name="partner_id" ref="demo_partner_jane" />
+        <field name="customer_name">Jane Doe</field>
+        <field name="customer_email">jane.doe@example.com</field>
+        <field name="product_id" ref="demo_product_smartphone" />
+        <field name="category_id" ref="demo_category_electronics" />
+        <field name="pros">Excellent camera, smooth performance, sleek design</field>
+        <field name="cons">Battery life could be better</field>
+        <field name="recommend">True</field>
+        <field name="verified_purchase">True</field>
+        <field name="state">approved</field>
+        <field name="website_published">True</field>
+        <field name="helpfulness_count">8</field>
+        <field name="total_votes">12</field>
+    </record>
+
+    <record id="demo_review_3" model="review.feedback">
+        <field name="title">Software works well but could be more intuitive</field>
+        <field name="content">The software does what it promises and has all the features I need.
+            However, the user interface could be more intuitive. It took me a while to figure out
+            some of the advanced features. Customer support was helpful though.</field>
+        <field name="rating">3</field>
+        <field name="partner_id" ref="demo_partner_bob" />
+        <field name="customer_name">Bob Johnson</field>
+        <field name="customer_email">bob.johnson@example.com</field>
+        <field name="product_id" ref="demo_product_software" />
+        <field name="category_id" ref="demo_category_software" />
+        <field name="pros">All features work as expected, good customer support</field>
+        <field name="cons">User interface is not intuitive</field>
+        <field name="recommend">False</field>
+        <field name="verified_purchase">True</field>
+        <field name="state">approved</field>
+        <field name="website_published">True</field>
+        <field name="helpfulness_count">5</field>
+        <field name="total_votes">9</field>
+        <field name="business_response">Thank you for your feedback! We're working on improving the
+            user interface in our next update. Please don't hesitate to contact our support team if
+            you need any assistance.</field>
+        <field name="response_date"
+            eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+
+    <record id="demo_review_4" model="review.feedback">
+        <field name="title">Amazing product, exceeded expectations</field>
+        <field name="content">This product has completely exceeded my expectations! The quality is
+            outstanding, delivery was quick, and the customer service was excellent. I've already
+            recommended it to several friends and colleagues. Will definitely buy from this company
+            again.</field>
+        <field name="rating">5</field>
+        <field name="partner_id" ref="demo_partner_john" />
+        <field name="customer_name">John Smith</field>
+        <field name="customer_email">john.smith@example.com</field>
+        <field name="product_id" ref="demo_product_laptop" />
+        <field name="category_id" ref="demo_category_electronics" />
+        <field name="pros">Outstanding quality, quick delivery, excellent customer service</field>
+        <field name="cons">None that I can think of</field>
+        <field name="recommend">True</field>
+        <field name="verified_purchase">True</field>
+        <field name="state">approved</field>
+        <field name="website_published">True</field>
+        <field name="helpfulness_count">22</field>
+        <field name="total_votes">25</field>
+    </record>
+
+    <record id="demo_review_5" model="review.feedback">
+        <field name="title">Decent but not exceptional</field>
+        <field name="content">The product is decent and does what it's supposed to do. The price
+            point is fair, but I was expecting a bit more based on the reviews. It's not bad, just
+            not as amazing as I hoped. Would consider other options next time.</field>
+        <field name="rating">3</field>
+        <field name="partner_id" ref="demo_partner_jane" />
+        <field name="customer_name">Jane Doe</field>
+        <field name="customer_email">jane.doe@example.com</field>
+        <field name="product_id" ref="demo_product_smartphone" />
+        <field name="category_id" ref="demo_category_electronics" />
+        <field name="pros">Fair price, does the job</field>
+        <field name="cons">Not as exceptional as expected</field>
+        <field name="recommend">False</field>
+        <field name="verified_purchase">True</field>
+        <field name="state">approved</field>
+        <field name="website_published">True</field>
+        <field name="helpfulness_count">3</field>
+        <field name="total_votes">8</field>
+    </record>
+
+    <!-- Pending Review for Moderation Demo -->
+    <record id="demo_review_pending" model="review.feedback">
+        <field name="title">Waiting for your approval</field>
+        <field name="content">This is a demo review that's waiting for moderation. It demonstrates
+            the moderation workflow where reviews need to be approved before being published on the
+            website.</field>
+        <field name="rating">4</field>
+        <field name="customer_name">Demo User</field>
+        <field name="customer_email">demo@example.com</field>
+        <field name="product_id" ref="demo_product_software" />
+        <field name="category_id" ref="demo_category_software" />
+        <field name="pros">Good features</field>
+        <field name="cons">Could be better</field>
+        <field name="recommend">True</field>
+        <field name="verified_purchase">False</field>
+        <field name="state">submitted</field>
+        <field name="website_published">False</field>
+    </record>
+
+    <!-- Anonymous Review Demo -->
+    <record id="demo_review_anonymous" model="review.feedback">
+        <field name="title">Anonymous review example</field>
+        <field name="content">This is an example of an anonymous review. The customer chose not to
+            provide their personal information but still wanted to share their experience with the
+            product.</field>
+        <field name="rating">4</field>
+        <field name="customer_name">Anonymous</field>
+        <field name="customer_email">anonymous@example.com</field>
+        <field name="is_anonymous">True</field>
+        <field name="product_id" ref="demo_product_laptop" />
+        <field name="category_id" ref="demo_category_electronics" />
+        <field name="pros">Good value for money</field>
+        <field name="cons">Shipping took a bit long</field>
+        <field name="recommend">True</field>
+        <field name="verified_purchase">False</field>
+        <field name="state">approved</field>
+        <field name="website_published">True</field>
+        <field name="helpfulness_count">7</field>
+        <field name="total_votes">10</field>
+    </record>
+</odoo>

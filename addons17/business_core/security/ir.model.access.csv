@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_business,business_core.business,model_business_core_business,,1,1,1,1
+access_business_preference,business_core.business_preference,model_business_core_business_preference,,1,1,1,1
+access_business_product,business_core.business_product,model_business_core_business_product,,1,1,1,1
+access_app,business_core.app,model_business_core_app,,1,1,1,1
+access_app_category,business_core.app_category,model_business_core_app_category,,1,1,1,1

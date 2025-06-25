@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_review_feedback_user,review.feedback.user,model_review_feedback,group_review_user,1,1,1,0
+access_review_feedback_moderator,review.feedback.moderator,model_review_feedback,group_review_moderator,1,1,1,1
+access_review_feedback_manager,review.feedback.manager,model_review_feedback,group_review_manager,1,1,1,1
+access_review_feedback_public,review.feedback.public,model_review_feedback,base.group_public,1,0,1,0
+access_review_feedback_portal,review.feedback.portal,model_review_feedback,base.group_portal,1,1,1,0
+access_review_category_user,review.category.user,model_review_category,base.group_user,1,0,0,0
+access_review_category_moderator,review.category.moderator,model_review_category,group_review_moderator,1,1,1,0
+access_review_category_manager,review.category.manager,model_review_category,group_review_manager,1,1,1,1
+access_review_category_public,review.category.public,model_review_category,base.group_public,1,0,0,0
+access_review_analytics_moderator,review.analytics.moderator,model_review_analytics,group_review_moderator,1,0,0,0
+access_review_analytics_manager,review.analytics.manager,model_review_analytics,group_review_manager,1,0,0,0
+access_review_bulk_action_moderator,review.bulk.action.moderator,model_review_bulk_action,group_review_moderator,1,1,1,1
+access_review_bulk_action_manager,review.bulk.action.manager,model_review_bulk_action,group_review_manager,1,1,1,1
+access_review_response_wizard_moderator,review.response.wizard.moderator,model_review_response_wizard,group_review_moderator,1,1,1,1
+access_review_response_wizard_manager,review.response.wizard.manager,model_review_response_wizard,group_review_manager,1,1,1,1

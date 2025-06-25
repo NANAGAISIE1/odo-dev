@@ -1,0 +1,37 @@
+<odoo>
+    <!-- FORM VIEW -->
+    <record id="view_business_preference_form" model="ir.ui.view">
+        <field name="name">business_preference.form</field>
+        <field name="model">business_core.business_preference</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="link_id" />
+                        <field name="type" />
+                        <field name="sources" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW -->
+    <record id="view_business_preference_tree" model="ir.ui.view">
+        <field name="name">business_preference.tree</field>
+        <field name="model">business_core.business_preference</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="link_id" />
+                <field name="type" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_business_preference" model="ir.actions.act_window">
+        <field name="name">Business Preferences</field>
+        <field name="res_model">business_core.business_preference</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

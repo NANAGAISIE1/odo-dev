@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" rx="16" fill="#4CAF50"/>
+  
+  <!-- Main star -->
+  <path d="M64 20 L72 44 L98 44 L78 60 L86 84 L64 68 L42 84 L50 60 L30 44 L56 44 Z" fill="#FFFFFF" stroke="#FFD700" stroke-width="2"/>
+  
+  <!-- Smaller stars -->
+  <circle cx="25" cy="25" r="3" fill="#FFD700"/>
+  <circle cx="103" cy="25" r="3" fill="#FFD700"/>
+  <circle cx="25" cy="103" r="3" fill="#FFD700"/>
+  <circle cx="103" cy="103" r="3" fill="#FFD700"/>
+  
+  <!-- Review lines -->
+  <rect x="20" y="95" width="30" height="2" rx="1" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="20" y="100" width="25" height="2" rx="1" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="20" y="105" width="35" height="2" rx="1" fill="#FFFFFF" opacity="0.8"/>
+  
+  <rect x="78" y="95" width="30" height="2" rx="1" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="78" y="100" width="25" height="2" rx="1" fill="#FFFFFF" opacity="0.8"/>
+  <rect x="78" y="105" width="35" height="2" rx="1" fill="#FFFFFF" opacity="0.8"/>
+</svg>

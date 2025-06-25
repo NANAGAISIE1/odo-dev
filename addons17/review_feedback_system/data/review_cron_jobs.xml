@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cron Job: Clean up old reviews -->
+    <record id="cron_cleanup_old_reviews" model="ir.cron">
+        <field name="name">Review System: Cleanup Old Reviews</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="state">code</field>
+        <field name="code">
+            # Clean up old expired reviews based on settings
+            expiry_days =
+            int(env['ir.config_parameter'].sudo().get_param('review_feedback_system.review_expiry_days',
+            0))
+
+            if expiry_days > 0:
+            from datetime import datetime, timedelta
+            cutoff_date = datetime.now() - timedelta(days=expiry_days)
+
+            old_reviews = env['review.feedback'].search([
+            ('create_date', '&lt;', cutoff_date),
+            ('state', 'in', ['draft', 'rejected'])
+            ])
+
+            if old_reviews:
+            old_reviews.unlink()
+            log('Deleted %d old reviews' % len(old_reviews))
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="active" eval="False" />
+    </record>
+
+    <!-- Cron Job: Auto-approve verified purchases -->
+    <record id="cron_auto_approve_verified" model="ir.cron">
+        <field name="name">Review System: Auto-approve Verified Purchases</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="state">code</field>
+        <field name="code">
+            # Auto-approve reviews from verified purchases if enabled
+            auto_approve =
+            env['ir.config_parameter'].sudo().get_param('review_feedback_system.auto_approve_verified',
+            False)
+
+            if auto_approve:
+            min_rating =
+            env['ir.config_parameter'].sudo().get_param('review_feedback_system.min_rating_publish',
+            '1')
+
+            eligible_reviews = env['review.feedback'].search([
+            ('state', '=', 'submitted'),
+            ('verified_purchase', '=', True),
+            ('rating', '>=', min_rating)
+            ])
+
+            if eligible_reviews:
+            for review in eligible_reviews:
+            review.action_approve()
+            log('Auto-approved %d verified purchase reviews' % len(eligible_reviews))
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="active" eval="True" />
+    </record>
+
+    <!-- Cron Job: Send review notifications -->
+    <record id="cron_send_review_notifications" model="ir.cron">
+        <field name="name">Review System: Send Pending Notifications</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="state">code</field>
+        <field name="code">
+            # Send notifications for reviews that need attention
+            notify_enabled =
+            env['ir.config_parameter'].sudo().get_param('review_feedback_system.notify_new_review',
+            True)
+            notification_email =
+            env['ir.config_parameter'].sudo().get_param('review_feedback_system.notification_email',
+            '')
+
+            if notify_enabled and notification_email:
+            # Find reviews submitted in the last hour that haven't been notified
+            from datetime import datetime, timedelta
+            one_hour_ago = datetime.now() - timedelta(hours=1)
+
+            pending_reviews = env['review.feedback'].search([
+            ('state', '=', 'submitted'),
+            ('create_date', '>=', one_hour_ago),
+            ('message_ids', '=', False) # No messages sent yet
+            ])
+
+            if pending_reviews:
+            template = env.ref('review_feedback_system.email_template_new_review_notification',
+            False)
+            if template:
+            for review in pending_reviews:
+            try:
+            template.with_context(email_to=notification_email).send_mail(review.id, force_send=True)
+            except Exception as e:
+            log('Failed to send notification for review %d: %s' % (review.id, str(e)))
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="active" eval="True" />
+    </record>
+
+    <!-- Cron Job: Update review statistics -->
+    <record id="cron_update_review_stats" model="ir.cron">
+        <field name="name">Review System: Update Statistics</field>
+        <field name="model_id" ref="model_product_template" />
+        <field name="state">code</field>
+        <field name="code">
+            # Update product review statistics
+            products_with_reviews = env['product.template'].search([
+            ('review_ids', '!=', False)
+            ])
+
+            if products_with_reviews:
+            # Force recomputation of review statistics
+            products_with_reviews._compute_review_stats()
+            log('Updated review statistics for %d products' % len(products_with_reviews))
+
+            # Update category statistics
+            categories_with_reviews = env['review.category'].search([
+            ('review_ids', '!=', False)
+            ])
+
+            if categories_with_reviews:
+            categories_with_reviews._compute_review_stats()
+            log('Updated review statistics for %d categories' % len(categories_with_reviews))
+        </field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False" />
+        <field name="active" eval="True" />
+    </record>
+</odoo>

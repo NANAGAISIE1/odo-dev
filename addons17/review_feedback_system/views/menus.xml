@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Review Main Menu -->
+    <menuitem id="menu_review_main"
+        name="Reviews"
+        web_icon="review_feedback_system,static/description/icon.png"
+        sequence="120" />
+
+    <!-- Review Management Submenu -->
+    <menuitem id="menu_review_management"
+        name="Reviews"
+        parent="menu_review_main"
+        sequence="10" />
+
+    <!-- Reviews List -->
+    <menuitem id="menu_review_list"
+        name="All Reviews"
+        parent="menu_review_management"
+        action="action_review_feedback"
+        sequence="10" />
+
+    <!-- Review Moderation -->
+    <menuitem id="menu_review_moderation"
+        name="Pending Moderation"
+        parent="menu_review_management"
+        action="action_review_moderation"
+        sequence="20"
+        groups="review_feedback_system.group_review_moderator" />
+
+    <!-- Published Reviews -->
+    <menuitem id="menu_review_published"
+        name="Published Reviews"
+        parent="menu_review_management"
+        action="action_review_published"
+        sequence="30" />
+
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_review_configuration"
+        name="Configuration"
+        parent="menu_review_main"
+        sequence="90"
+        groups="review_feedback_system.group_review_manager" />
+
+    <!-- Review Categories -->
+    <menuitem id="menu_review_categories"
+        name="Categories"
+        parent="menu_review_configuration"
+        action="action_review_category"
+        sequence="10" />
+
+    <!-- Review Settings -->
+    <menuitem id="menu_review_settings"
+        name="Settings"
+        parent="menu_review_configuration"
+        action="action_review_settings"
+        sequence="90" />
+
+    <!-- Analytics Submenu -->
+    <menuitem id="menu_review_analytics"
+        name="Analytics"
+        parent="menu_review_main"
+        sequence="80"
+        groups="review_feedback_system.group_review_moderator" />
+
+    <!-- Review Analytics -->
+    <menuitem id="menu_review_analytics_reports"
+        name="Review Analytics"
+        parent="menu_review_analytics"
+        action="action_review_analytics"
+        sequence="10" />
+
+    <!-- Website Menu Items -->
+    <record id="website_menu_reviews" model="website.menu">
+        <field name="name">Reviews</field>
+        <field name="url">/reviews</field>
+        <field name="parent_id" ref="website.main_menu" />
+        <field name="sequence">50</field>
+    </record>
+
+    <!-- Settings Menu Integration -->
+    <record id="review_settings_menu" model="ir.ui.menu">
+        <field name="name">Review Settings</field>
+        <field name="parent_id" ref="base.menu_administration" />
+        <field name="action" ref="action_review_settings" />
+        <field name="sequence">100</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]" />
+    </record>
+</odoo>

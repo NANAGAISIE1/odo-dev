@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Review List Template -->
+    <template id="reviews_list_template" name="Reviews List">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="oe_structure">
+                                <section class="mb-4">
+                                    <h1 class="text-center mb-4">Customer Reviews</h1>
+
+                                    <!-- Search and Filter Bar -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <form method="get" class="form-inline">
+                                                <input type="text" name="search"
+                                                    class="form-control mr-2"
+                                                    placeholder="Search reviews..."
+                                                    t-att-value="search" />
+                                                <input type="hidden" name="category"
+                                                    t-att-value="current_category" />
+                                                <input type="hidden" name="product"
+                                                    t-att-value="current_product" />
+                                                <input type="hidden" name="rating"
+                                                    t-att-value="current_rating" />
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </form>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <a href="/review/submit" class="btn btn-success">
+                                                <i class="fa fa-plus" /> Write a Review </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Filter Tabs -->
+                                    <ul class="nav nav-tabs mb-4">
+                                        <li class="nav-item">
+                                            <a class="nav-link"
+                                                t-att-class="'active' if not current_category else ''"
+                                                href="/reviews">All Categories</a>
+                                        </li>
+                                        <t t-foreach="categories" t-as="category">
+                                            <li class="nav-item">
+                                                <a class="nav-link"
+                                                    t-att-class="'active' if current_category == category.id else ''"
+                                                    t-attf-href="/reviews?category=#{category.id}">
+                                                    <t t-esc="category.name" />
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+
+                                    <!-- Reviews Count -->
+                                    <div class="mb-3">
+                                        <h5><t t-esc="total_reviews" /> Reviews Found</h5>
+                                    </div>
+
+                                    <!-- Reviews List -->
+                                    <div class="reviews-list">
+                                        <t t-if="reviews">
+                                            <t t-foreach="reviews" t-as="review">
+                                                <div class="card mb-4 review-card">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <h5 class="card-title">
+                                                                    <a
+                                                                        t-attf-href="/review/#{review.id}"
+                                                                        class="text-decoration-none">
+                                                                        <t t-esc="review.title" />
+                                                                    </a>
+                                                                </h5>
+                                                                <div class="review-rating mb-2">
+                                                                    <t t-foreach="range(1, 6)"
+                                                                        t-as="star">
+                                                                        <i
+                                                                            t-att-class="'fa fa-star' + (' text-warning' if star &lt;= review.rating_value else ' text-muted')" />
+                                                                    </t>
+                                                                    <span class="ml-2 text-muted">
+                                                                        <t
+                                                                            t-esc="review.rating_value" />
+                                                                        out of 5 </span>
+                                                                </div>
+                                                                <p class="card-text">
+                                                                    <t t-esc="review.content[:200]" />
+                                                                    <t
+                                                                        t-if="len(review.content) > 200">
+                                                                        ...</t>
+                                                                </p>
+                                                                <div class="review-meta text-muted">
+                                                                    <small> By <strong>
+                                                                            <t
+                                                                                t-esc="review.customer_name or review.partner_id.name or 'Anonymous'" />
+                                                                        </strong>
+                                                                        on <t
+                                                                            t-esc="review.create_date.strftime('%B %d, %Y')" />
+                                                                        <t
+                                                                            t-if="review.verified_purchase">
+                                                                            <span
+                                                                                class="badge badge-success ml-2">Verified
+                                                                        Purchase</span>
+                                                                        </t>
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4 text-right">
+                                                                <t t-if="review.product_id">
+                                                                    <div class="mb-2">
+                                                                        <strong>Product:</strong>
+                                                                        <br />
+                                                                        <a
+                                                                            t-attf-href="/shop/product/#{review.product_id.id}"
+                                                                            class="text-decoration-none">
+                                                                            <t
+                                                                                t-esc="review.product_id.name" />
+                                                                        </a>
+                                                                    </div>
+                                                                </t>
+                                                                <div class="review-helpfulness">
+                                                                    <small class="text-muted">
+                                                                        <t
+                                                                            t-esc="review.helpfulness_count" />
+                                                                        out of <t
+                                                                            t-esc="review.total_votes" />
+                                                                        found this helpful </small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="text-center py-5">
+                                                <h4>No reviews found</h4>
+                                                <p class="text-muted">Be the first to write a
+                                                    review!</p>
+                                                <a href="/review/submit" class="btn btn-primary">Write
+                                                    a Review</a>
+                                            </div>
+                                        </t>
+                                    </div>
+
+                                    <!-- Pagination -->
+                                    <t t-if="pager">
+                                        <t t-call="website.pager" />
+                                    </t>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Review Submission Form Template -->
+    <template id="review_submit_template" name="Submit Review">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="oe_structure">
+                                <section class="mb-4">
+                                    <h1 class="text-center mb-4">Write a Review</h1>
+
+                                    <t t-if="error_message">
+                                        <div class="alert alert-danger" role="alert">
+                                            <t t-esc="error_message" />
+                                        </div>
+                                    </t>
+
+                                    <form method="post" enctype="multipart/form-data"
+                                        class="review-form">
+                                        <input type="hidden" name="csrf_token"
+                                            t-att-value="request.csrf_token()" />
+
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="title" class="required">Review Title</label>
+                                                    <input type="text" name="title" id="title"
+                                                        class="form-control"
+                                                        required="required"
+                                                        placeholder="Give your review a title..."
+                                                        t-att-value="form_data.get('title', '') if form_data else ''" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="rating" class="required">Rating</label>
+                                                    <div class="rating-input">
+                                                        <t t-foreach="range(1, 6)" t-as="star">
+                                                            <input type="radio" name="rating"
+                                                                t-att-value="star"
+                                                                t-att-id="'star-%s' % star"
+                                                                class="rating-radio"
+                                                                t-att-checked="form_data and form_data.get('rating', '') == str(star)" />
+                                                            <label t-att-for="'star-%s' % star"
+                                                                class="rating-label">
+                                                                <i class="fa fa-star" />
+                                                            </label>
+                                                        </t>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="content" class="required">Review
+                                                        Content</label>
+                                                    <textarea name="content" id="content"
+                                                        class="form-control"
+                                                        rows="5" required="required"
+                                                        placeholder="Tell us about your experience..."
+                                                        t-text="form_data.get('content', '') if form_data else ''" />
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="product_id">Product/Service</label>
+                                                            <select name="product_id"
+                                                                id="product_id" class="form-control">
+                                                                <option value="">Select a product...</option>
+                                                                <t t-foreach="products"
+                                                                    t-as="product">
+                                                                    <option t-att-value="product.id"
+                                                                        t-att-selected="form_data and form_data.get('product_id') == str(product.id)">
+                                                                        <t t-esc="product.name" />
+                                                                    </option>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="category_id">Category</label>
+                                                            <select name="category_id"
+                                                                id="category_id"
+                                                                class="form-control">
+                                                                <option value="">Select a
+                                                                    category...</option>
+                                                                <t t-foreach="categories"
+                                                                    t-as="category">
+                                                                    <option
+                                                                        t-att-value="category.id"
+                                                                        t-att-selected="form_data and form_data.get('category_id') == str(category.id)">
+                                                                        <t t-esc="category.name" />
+                                                                    </option>
+                                                                </t>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="pros">Pros (What you liked)</label>
+                                                            <textarea name="pros" id="pros"
+                                                                class="form-control"
+                                                                rows="3"
+                                                                placeholder="What were the positive aspects?"
+                                                                t-text="form_data.get('pros', '') if form_data else ''" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label for="cons">Cons (What could be
+                                                                improved)</label>
+                                                            <textarea name="cons" id="cons"
+                                                                class="form-control"
+                                                                rows="3"
+                                                                placeholder="What could be better?"
+                                                                t-text="form_data.get('cons', '') if form_data else ''" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" name="recommend"
+                                                            id="recommend"
+                                                            class="form-check-input" value="on"
+                                                            t-att-checked="form_data and form_data.get('recommend')" />
+                                                        <label for="recommend"
+                                                            class="form-check-label">
+                                                            I would recommend this product/service
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="customer_name">Your Name</label>
+                                                    <input type="text" name="customer_name"
+                                                        id="customer_name"
+                                                        class="form-control"
+                                                        placeholder="Enter your name"
+                                                        t-att-value="form_data.get('customer_name', '') if form_data else (request.env.user.name if request.env.user._is_public() == False else '')" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="customer_email">Your Email</label>
+                                                    <input type="email" name="customer_email"
+                                                        id="customer_email"
+                                                        class="form-control"
+                                                        placeholder="Enter your email"
+                                                        t-att-value="form_data.get('customer_email', '') if form_data else (request.env.user.email if request.env.user._is_public() == False else '')" />
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="attachments">Attachments (optional)</label>
+                                                    <input type="file" name="attachments"
+                                                        id="attachments"
+                                                        class="form-control-file"
+                                                        multiple="multiple"
+                                                        accept="image/*,.pdf,.doc,.docx" />
+                                                    <small class="form-text text-muted">
+                                                        You can upload images or documents to
+                                                        support your review.
+                                                    </small>
+                                                </div>
+
+                                                <div class="form-group text-center">
+                                                    <button type="submit"
+                                                        class="btn btn-primary btn-lg">
+                                                        Submit Review
+                                                    </button>
+                                                    <a href="/reviews"
+                                                        class="btn btn-secondary btn-lg ml-2">
+                                                        Cancel
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Review Detail Template -->
+    <template id="review_detail_template" name="Review Detail">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="oe_structure">
+                                <section class="mb-4">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item">
+                                                <a href="/reviews">Reviews</a>
+                                            </li>
+                                            <li class="breadcrumb-item active">
+                                                <t t-esc="review.title" />
+                                            </li>
+                                        </ol>
+                                    </nav>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h1 class="card-title">
+                                                <t t-esc="review.title" />
+                                            </h1>
+
+                                            <div class="review-rating mb-3">
+                                                <t t-foreach="range(1, 6)" t-as="star">
+                                                    <i
+                                                        t-att-class="'fa fa-star' + (' text-warning' if star &lt;= review.rating_value else ' text-muted')" />
+                                                </t>
+                                                <span class="ml-2">
+                                                    <strong><t t-esc="review.rating_value" /> out of
+                                                        5</strong>
+                                                </span>
+                                                <t t-if="review.verified_purchase">
+                                                    <span class="badge badge-success ml-2">Verified
+                                                        Purchase</span>
+                                                </t>
+                                            </div>
+
+                                            <div class="review-meta mb-3 text-muted">
+                                                <small> By <strong>
+                                                        <t
+                                                            t-esc="review.customer_name or review.partner_id.name or 'Anonymous'" />
+                                                    </strong>
+                                                    on <t
+                                                        t-esc="review.create_date.strftime('%B %d, %Y')" />
+                                                </small>
+                                            </div>
+
+                                            <div class="review-content mb-4">
+                                                <p>
+                                                    <t t-esc="review.content" />
+                                                </p>
+                                            </div>
+
+                                            <t t-if="review.pros or review.cons">
+                                                <div class="row mb-4">
+                                                    <t t-if="review.pros">
+                                                        <div class="col-md-6">
+                                                            <h6 class="text-success">
+                                                                <i class="fa fa-thumbs-up" /> Pros </h6>
+                                                            <p>
+                                                                <t t-esc="review.pros" />
+                                                            </p>
+                                                        </div>
+                                                    </t>
+                                                    <t t-if="review.cons">
+                                                        <div class="col-md-6">
+                                                            <h6 class="text-danger">
+                                                                <i class="fa fa-thumbs-down" /> Cons </h6>
+                                                            <p>
+                                                                <t t-esc="review.cons" />
+                                                            </p>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </t>
+
+                                            <t t-if="review.recommend">
+                                                <div class="alert alert-success" role="alert">
+                                                    <i class="fa fa-check-circle" /> This reviewer
+                                                    recommends this product/service </div>
+                                            </t>
+
+                                            <!-- Attachments -->
+                                            <t t-if="review.attachment_ids">
+                                                <div class="review-attachments mb-4">
+                                                    <h6>Attachments</h6>
+                                                    <div class="row">
+                                                        <t t-foreach="review.attachment_ids"
+                                                            t-as="attachment">
+                                                            <div class="col-md-3 mb-2">
+                                                                <t
+                                                                    t-if="attachment.mimetype and 'image' in attachment.mimetype">
+                                                                    <img
+                                                                        t-att-src="'/web/content/%s' % attachment.id"
+                                                                        class="img-fluid img-thumbnail"
+                                                                        t-att-alt="attachment.name" />
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <a
+                                                                        t-att-href="'/web/content/%s' % attachment.id"
+                                                                        target="_blank"
+                                                                        class="btn btn-outline-primary btn-sm">
+                                                                        <i class="fa fa-file" />
+                                                                        <t t-esc="attachment.name" />
+                                                                    </a>
+                                                                </t>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </t>
+
+                                            <!-- Business Response -->
+                                            <t t-if="review.business_response">
+                                                <div class="business-response mt-4">
+                                                    <h6><i class="fa fa-reply" /> Business Response</h6>
+                                                    <div class="card bg-light">
+                                                        <div class="card-body">
+                                                            <p>
+                                                                <t t-esc="review.business_response" />
+                                                            </p>
+                                                            <small class="text-muted"> Response by <t
+                                                                    t-esc="review.response_user_id.name" />
+                                                                on <t
+                                                                    t-esc="review.response_date.strftime('%B %d, %Y')" />
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+
+                                            <!-- Helpfulness Voting -->
+                                            <div class="review-voting mt-4">
+                                                <p class="mb-2">Was this review helpful?</p>
+                                                <button
+                                                    class="btn btn-outline-success btn-sm vote-btn"
+                                                    data-review-id="#{review.id}"
+                                                    data-helpful="true">
+                                                    <i class="fa fa-thumbs-up" /> Yes (<span
+                                                        class="helpful-count">
+                                                        <t t-esc="review.helpfulness_count" />
+                                                    </span>
+                                                    )
+                                                </button>
+                                                <button
+                                                    class="btn btn-outline-danger btn-sm vote-btn ml-2"
+                                                    data-review-id="#{review.id}"
+                                                    data-helpful="false">
+                                                    <i class="fa fa-thumbs-down" /> No </button>
+                                                <small class="text-muted ml-3">
+                                                    <t t-esc="review.helpfulness_count" /> out of <t
+                                                        t-esc="review.total_votes" /> found this
+                                                    helpful </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="oe_structure">
+                                <!-- Product Information -->
+                                <t t-if="review.product_id">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <h6 class="card-title">About this Product</h6>
+                                            <a t-attf-href="/shop/product/#{review.product_id.id}"
+                                                class="text-decoration-none">
+                                                <strong>
+                                                    <t t-esc="review.product_id.name" />
+                                                </strong>
+                                            </a>
+                                            <t t-if="review.product_id.list_price">
+                                                <div class="mt-2">
+                                                    <span class="text-primary">
+                                                        <t t-esc="review.product_id.list_price"
+                                                            t-options="{'widget': 'monetary', 'display_currency': request.env.company.currency_id}" />
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Related Reviews -->
+                                <t t-if="related_reviews">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">More Reviews</h6>
+                                            <t t-foreach="related_reviews" t-as="rel_review">
+                                                <div class="mb-3 pb-3 border-bottom">
+                                                    <div class="review-rating mb-1">
+                                                        <t t-foreach="range(1, 6)" t-as="star">
+                                                            <i
+                                                                t-att-class="'fa fa-star' + (' text-warning' if star &lt;= rel_review.rating_value else ' text-muted')" />
+                                                        </t>
+                                                    </div>
+                                                    <a t-attf-href="/review/#{rel_review.id}"
+                                                        class="text-decoration-none">
+                                                        <strong>
+                                                            <t t-esc="rel_review.title" />
+                                                        </strong>
+                                                    </a>
+                                                    <div class="text-muted">
+                                                        <small> By <t
+                                                                t-esc="rel_review.customer_name or rel_review.partner_id.name or 'Anonymous'" />
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Thank You Template -->
+    <template id="review_thank_you_template" name="Review Thank You">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                            <div class="oe_structure">
+                                <section class="text-center py-5">
+                                    <div class="mb-4">
+                                        <i class="fa fa-check-circle text-success"
+                                            style="font-size: 4rem;" />
+                                    </div>
+                                    <h1 class="mb-3">Thank You!</h1>
+                                    <p class="lead mb-4"> Your review has been submitted
+                                        successfully. <t
+                                            t-if="review and review.state == 'submitted'">
+                                            It will be reviewed by our moderators before being
+                                        published.
+                                        </t>
+                                        <t
+                                            t-else="">
+                                            Thank you for your feedback!
+                                        </t>
+                                    </p>
+                                    <div class="mb-4">
+                                        <a href="/reviews" class="btn btn-primary">View All Reviews</a>
+                                        <a href="/review/submit"
+                                            class="btn btn-outline-primary ml-2">Write Another
+                                            Review</a>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Product Reviews Section (to be included in product pages) -->
+    <template id="product_reviews_section" name="Product Reviews Section">
+        <div class="product-reviews-section mt-5">
+            <h3>Customer Reviews</h3>
+            <div id="product-reviews-container" t-att-data-product-id="product.id">
+                <!-- Reviews will be loaded via AJAX -->
+                <div class="text-center py-4">
+                    <i class="fa fa-spinner fa-spin fa-2x" />
+                    <p class="mt-2">Loading reviews...</p>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

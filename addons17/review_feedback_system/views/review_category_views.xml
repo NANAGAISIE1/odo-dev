@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Review Category Form View -->
+    <record id="review_category_form_view" model="ir.ui.view">
+        <field name="name">review.category.form</field>
+        <field name="model">review.category</field>
+        <field name="arch" type="xml">
+            <form string="Review Category">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_website_published" type="object"
+                            class="oe_stat_button" icon="fa-globe">
+                            <field name="website_published" widget="website_published_button" />
+                        </button>
+                        <button name="action_view_reviews" type="object"
+                            class="oe_stat_button" icon="fa-star">
+                            <field name="review_count" widget="statinfo" string="Reviews" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Category Name..." />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" />
+                            <field name="parent_id" />
+                            <field name="website_sequence" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" placeholder="Category description..." />
+                        </page>
+                        <page string="Website Settings">
+                            <group>
+                                <field name="website_meta_title" />
+                                <field name="website_meta_description" />
+                                <field name="website_meta_keywords" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Review Category Tree View -->
+    <record id="review_category_tree_view" model="ir.ui.view">
+        <field name="name">review.category.tree</field>
+        <field name="model">review.category</field>
+        <field name="arch" type="xml">
+            <tree string="Review Categories">
+                <field name="name" />
+                <field name="parent_id" />
+                <field name="review_count" />
+                <field name="website_sequence" />
+                <field name="website_published" widget="boolean_toggle" />
+                <field name="active" widget="boolean_toggle" />
+                <field name="color" widget="color" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Review Category Search View -->
+    <record id="review_category_search_view" model="ir.ui.view">
+        <field name="name">review.category.search</field>
+        <field name="model">review.category</field>
+        <field name="arch" type="xml">
+            <search string="Review Categories">
+                <field name="name" />
+                <field name="description" />
+                <field name="parent_id" />
+                <separator />
+                <filter name="published" string="Published"
+                    domain="[('website_published', '=', True)]" />
+                <filter name="active" string="Active"
+                    domain="[('active', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_parent" string="Parent Category"
+                        context="{'group_by': 'parent_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Review Category Action -->
+    <record id="action_review_category" model="ir.actions.act_window">
+        <field name="name">Review Categories</field>
+        <field name="res_model">review.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first review category!
+            </p>
+            <p>
+                Categories help organize reviews by topic or product type.
+            </p>
+        </field>
+    </record>
+</odoo>

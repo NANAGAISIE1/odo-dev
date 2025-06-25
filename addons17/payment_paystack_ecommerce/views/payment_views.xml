@@ -1,0 +1,19 @@
+<odoo>
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">Paystack</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name=&quot;acquirer&quot;]" position="inside">
+                <group invisible="provider != 'paystack'">
+                    <field name="pstack_public_key"
+                        required="provider == 'paystack' and state != 'disabled'" password="False" />
+                    <field name="pstack_secret_key"
+                        required="provider == 'paystack' and state != 'disabled'" password="True" />
+                    <!-- <field name="rave_secret_hash" password="False"/> -->
+                    <field name="environment" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

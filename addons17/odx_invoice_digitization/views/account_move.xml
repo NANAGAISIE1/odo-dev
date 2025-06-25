@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form.my.button</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <field name="enable_invoice_digitizer" invisible="1"/>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button name="action_digitize_invoice" string="Digitize Invoice" type="object" class="btn-primary" invisible="not enable_invoice_digitizer"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template: Review Approved -->
+    <record id="email_template_review_approved" model="mail.template">
+        <field name="name">Review Approved</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="subject">Your review has been approved - {{ object.title }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
+        <field name="email_to">{{ object.customer_email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear {{ object.customer_name or 'Customer' }},</p>
+
+                <p>Thank you for taking the time to share your feedback with us!</p>
+
+                <p>We're pleased to inform you that your review "<strong>{{ object.title }}</strong>"
+                    has been approved and is now live on our website.</p>
+
+                <div
+                    style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; background-color: #f9f9f9;">
+                    <h3>Your Review:</h3>
+                    <p><strong>Title:</strong> {{ object.title }}</p>
+                    <p><strong>
+                    Rating:</strong> {{ object.rating }} ⭐</p>
+                    <p>
+                        <strong>Review:</strong>
+                    </p>
+                    <p>{{ object.content }}</p>
+                    {% if object.product_id %} <p><strong>Product:</strong> {{
+                    object.product_id.name }}</p> {% endif %} </div>
+
+                <p>Your feedback helps other customers make informed decisions and helps us improve
+                    our products and services.</p>
+
+                <p>You can view your review on our website: <a href="{{ object.website_url }}">View
+                    Review</a></p>
+
+                <p>Thank you again for choosing us!</p>
+
+                <p>Best regards,<br /> {{ user.name }}<br /> {{ object.company_id.name }}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Email Template: Review Rejected -->
+    <record id="email_template_review_rejected" model="mail.template">
+        <field name="name">Review Rejected</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="subject">Update on your review submission - {{ object.title }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
+        <field name="email_to">{{ object.customer_email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear {{ object.customer_name or 'Customer' }},</p>
+
+                <p>Thank you for taking the time to submit a review for our product/service.</p>
+
+                <p>After careful consideration, we were unable to approve your review "<strong>{{
+                    object.title }}</strong>" for publication on our website.</p>
+
+                <div
+                    style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; background-color: #fff3cd;">
+                    <h3>Submitted Review:</h3>
+                    <p><strong>Title:</strong> {{ object.title }}</p>
+                    <p><strong>Rating:</strong> {{ object.rating }} ⭐</p>
+                    <p>
+                        <strong>Review:</strong>
+                    </p>
+                    <p>{{ object.content }}</p>
+                </div>
+
+                <p>This may be due to our review guidelines, which ensure all published reviews are
+                    helpful, relevant, and appropriate for our community.</p>
+
+                <p>If you have any questions about this decision or would like to submit a revised
+                    review, please don't hesitate to contact us.</p>
+
+                <p>We appreciate your feedback and thank you for your understanding.</p>
+
+                <p>Best regards,<br /> {{ user.name }}<br /> {{ object.company_id.name }}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Email Template: Business Response -->
+    <record id="email_template_business_response" model="mail.template">
+        <field name="name">Business Response to Review</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="subject">Response to your review - {{ object.title }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
+        <field name="email_to">{{ object.customer_email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear {{ object.customer_name or 'Customer' }},</p>
+
+                <p>Thank you for your review of our product/service. We've responded to your
+                    feedback and wanted to make sure you saw our response.</p>
+
+                <div
+                    style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; background-color: #f9f9f9;">
+                    <h3>Your Review:</h3>
+                    <p><strong>Title:</strong> {{ object.title }}</p>
+                    <p><strong>Rating:</strong> {{ object.rating }} ⭐</p>
+                    <p>{{ object.content }}</p>
+                </div>
+
+                <div
+                    style="border: 1px solid #007bff; padding: 15px; margin: 15px 0; background-color: #e7f3ff;">
+                    <h3>Our Response:</h3>
+                    <p>{{ object.business_response }}</p>
+                    <p>
+                        <em>- {{ object.response_user_id.name }}, {{ object.company_id.name }}</em>
+                    </p>
+                </div>
+
+                <p>We value your feedback and strive to address any concerns our customers may have.</p>
+
+                <p>You can view the full conversation on our website: <a
+                        href="{{ object.website_url }}">View Review</a></p>
+
+                <p>Thank you for helping us improve!</p>
+
+                <p>Best regards,<br /> {{ object.response_user_id.name }}<br /> {{
+                    object.company_id.name }}</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Email Template: New Review Notification -->
+    <record id="email_template_new_review_notification" model="mail.template">
+        <field name="name">New Review Notification</field>
+        <field name="model_id" ref="model_review_feedback" />
+        <field name="subject">New Review Submitted: {{ object.title }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email) }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <h2>New Review Submitted</h2>
+
+                <p>A new review has been submitted and requires moderation.</p>
+
+                <div style="border: 1px solid #ddd; padding: 15px; margin: 15px 0;">
+                    <h3>Review Details:</h3>
+                    <p><strong>Title:</strong> {{ object.title }}</p>
+                    <p><strong>
+                    Rating:</strong> {{ object.rating }} ⭐</p>
+                    <p><strong>Customer:</strong> {{
+                    object.customer_name or object.partner_id.name or 'Anonymous' }}</p>
+                    <p><strong>
+                    Email:</strong> {{ object.customer_email or object.partner_id.email or 'N/A' }}</p>
+                    {% if object.product_id %} <p><strong>Product:</strong> {{
+                    object.product_id.name }}</p> {% endif %} {% if object.category_id %} <p><strong>
+                    Category:</strong> {{ object.category_id.name }}</p> {% endif %} <p>
+                        <strong>Review Content:</strong>
+                    </p>
+                    <p>{{ object.content
+                    }}</p> {% if object.pros %} <p><strong>Pros:</strong> {{ object.pros }}</p> {%
+                    endif %} {% if object.cons %} <p><strong>Cons:</strong> {{ object.cons }}</p> {%
+                    endif %} <p><strong>Would Recommend:</strong> {{ 'Yes' if object.recommend else
+                    'No' }}</p>
+                    <p><strong>Verified Purchase:</strong> {{ 'Yes' if
+                    object.verified_purchase else 'No' }}</p>
+                </div>
+
+                <p>Please review and moderate this submission in the backend system.</p>
+
+                <p>
+                    <a href="/web#id={{ object.id }}&amp;model=review.feedback&amp;view_type=form"
+                        style="background-color: #007bff; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">Review
+                        in Backend</a>
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>

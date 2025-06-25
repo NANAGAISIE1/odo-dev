@@ -1,0 +1,40 @@
+<odoo>
+    <!-- FORM VIEW -->
+    <record id="view_app_form" model="ir.ui.view">
+        <field name="name">app.form</field>
+        <field name="model">business_core.app</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="summary" />
+                        <field name="image" />
+                        <field name="link" />
+                        <field name="cost" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- TREE VIEW -->
+    <record id="view_app_tree" model="ir.ui.view">
+        <field name="name">app.tree</field>
+        <field name="model">business_core.app</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="cost" />
+                <field name="link" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_app" model="ir.actions.act_window">
+        <field name="name">Apps</field>
+        <field name="res_model">business_core.app</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

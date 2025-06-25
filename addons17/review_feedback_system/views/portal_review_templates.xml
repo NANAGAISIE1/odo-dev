@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Portal Layout Extension -->
+    <template id="portal_layout" inherit_id="portal.portal_layout">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li class="breadcrumb-item">
+                <a t-attf-href="/my/reviews?{{ keep_query() }}">Reviews</a>
+            </li>
+        </xpath>
+    </template>
+
+    <!-- Portal My Reviews -->
+    <template id="portal_my_reviews" name="My Reviews">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Reviews</t>
+            </t>
+            <t t-if="not reviews">
+                <div class="alert alert-warning mt-3" role="alert">
+                    <h4>No reviews found!</h4>
+                    <p>You haven't written any reviews yet.</p>
+                    <a href="/review/submit" class="btn btn-primary">Write your first review</a>
+                </div>
+            </t>
+            <t t-if="reviews" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th class="text-left">Review</th>
+                        <th class="text-left">Product</th>
+                        <th class="text-center">Rating</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Published</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="reviews" t-as="review">
+                        <tr>
+                            <td class="text-left">
+                                <a t-attf-href="/my/review/#{review.id}">
+                                    <t t-esc="review.title" />
+                                </a>
+                            </td>
+                            <td class="text-left">
+                                <t t-if="review.product_id">
+                                    <t t-esc="review.product_id.name" />
+                                </t>
+                                <t t-else="">
+                                    <em class="text-muted">No product</em>
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <t t-foreach="range(1, 6)" t-as="star">
+                                    <i
+                                        t-att-class="'fa fa-star' + (' text-warning' if star &lt;= review.rating_value else ' text-muted')" />
+                                </t>
+                            </td>
+                            <td class="text-center">
+                                <span
+                                    t-att-class="'badge badge-' + ('success' if review.state == 'approved' else 'warning' if review.state == 'submitted' else 'danger' if review.state == 'rejected' else 'secondary')">
+                                    <t t-esc="review.state.title()" />
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span t-esc="review.create_date" t-options="{'widget': 'date'}" />
+                            </td>
+                            <td class="text-center">
+                                <t t-if="review.website_published">
+                                    <i class="fa fa-check text-success" />
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-times text-muted" />
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <!-- Portal Review Detail -->
+    <template id="portal_review_detail" name="Review Detail">
+        <t t-call="portal.portal_layout">
+            <t t-call="portal.portal_record_layout">
+                <t t-set="card_header">
+                    <h5 class="mb-0">
+                        <t t-esc="review.title" />
+                        <small class="text-muted"> (<t t-esc="review.state.title()" />) </small>
+                    </h5>
+                </t>
+                <t t-set="card_body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Rating:</strong>
+                            <div class="mt-1">
+                                <t t-foreach="range(1, 6)" t-as="star">
+                                    <i
+                                        t-att-class="'fa fa-star' + (' text-warning' if star &lt;= review.rating_value else ' text-muted')" />
+                                </t>
+                                <span class="ml-2"><t t-esc="review.rating_value" /> out of 5</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Date:</strong>
+                            <div class="mt-1">
+                                <t t-esc="review.create_date" t-options="{'widget': 'datetime'}" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <t t-if="review.product_id">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <strong>Product:</strong>
+                                <div class="mt-1">
+                                    <t t-esc="review.product_id.name" />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <strong>Review Content:</strong>
+                            <div class="mt-1 border p-3 rounded">
+                                <t t-esc="review.content" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <t t-if="review.pros or review.cons">
+                        <div class="row mb-3">
+                            <t t-if="review.pros">
+                                <div class="col-md-6">
+                                    <strong class="text-success">Pros:</strong>
+                                    <div class="mt-1">
+                                        <t t-esc="review.pros" />
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-if="review.cons">
+                                <div class="col-md-6">
+                                    <strong class="text-danger">Cons:</strong>
+                                    <div class="mt-1">
+                                        <t t-esc="review.cons" />
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <t t-if="review.recommend">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <div class="alert alert-success">
+                                    <i class="fa fa-check-circle" /> You recommended this
+                                    product/service </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Published on Website:</strong>
+                            <div class="mt-1">
+                                <t t-if="review.website_published">
+                                    <span class="text-success">
+                                        <i class="fa fa-check" /> Yes </span>
+                                    <t t-if="review.website_url">
+                                        <a t-att-href="review.website_url" target="_blank"
+                                            class="ml-2">
+                                            View on Website
+                                        </a>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted">
+                                        <i class="fa fa-times" /> No </span>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Verified Purchase:</strong>
+                            <div class="mt-1">
+                                <t t-if="review.verified_purchase">
+                                    <span class="text-success">
+                                        <i class="fa fa-check" /> Yes </span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted">
+                                        <i class="fa fa-times" /> No </span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <t t-if="review.business_response">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <strong>Business Response:</strong>
+                                <div class="mt-1 bg-light p-3 rounded">
+                                    <t t-esc="review.business_response" />
+                                    <t t-if="review.response_date">
+                                        <hr />
+                                        <small class="text-muted"> Response on <t
+                                                t-esc="review.response_date"
+                                                t-options="{'widget': 'date'}" />
+                                        </small>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <t t-if="review.attachment_ids">
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <strong>Attachments:</strong>
+                                <div class="mt-1">
+                                    <t t-foreach="review.attachment_ids" t-as="attachment">
+                                        <div class="mb-2">
+                                            <a
+                                                t-att-href="'/web/content/%s?download=true' % attachment.id"
+                                                class="btn btn-outline-primary btn-sm">
+                                                <i class="fa fa-download" />
+                                                <t t-esc="attachment.name" />
+                                            </a>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a t-attf-href="/my/reviews" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left" /> Back to Reviews </a>
+                            <t t-if="review.state in ['draft', 'submitted']">
+                                <a t-attf-href="/my/review/#{review.id}/edit"
+                                    class="btn btn-primary ml-2">
+                                    <i class="fa fa-edit" /> Edit Review </a>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Portal Review Edit -->
+    <template id="portal_review_edit" name="Edit Review">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h2>Edit Review</h2>
+
+                        <form method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token"
+                                t-att-value="request.csrf_token()" />
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="title" class="required">Review Title</label>
+                                        <input type="text" name="title" id="title"
+                                            class="form-control"
+                                            required="required" t-att-value="review.title" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="rating" class="required">Rating</label>
+                                        <select name="rating" id="rating" class="form-control"
+                                            required="required">
+                                            <option value="">Select rating...</option>
+                                            <option value="1" t-att-selected="review.rating == '1'">1
+                                                Star - Poor</option>
+                                            <option value="2" t-att-selected="review.rating == '2'">2
+                                                Stars - Fair</option>
+                                            <option value="3" t-att-selected="review.rating == '3'">3
+                                                Stars - Good</option>
+                                            <option value="4" t-att-selected="review.rating == '4'">4
+                                                Stars - Very Good</option>
+                                            <option value="5" t-att-selected="review.rating == '5'">5
+                                                Stars - Excellent</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="content" class="required">Review Content</label>
+                                        <textarea name="content" id="content" class="form-control"
+                                            rows="5" required="required" t-text="review.content" />
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="product_id">Product/Service</label>
+                                                <select name="product_id" id="product_id"
+                                                    class="form-control">
+                                                    <option value="">Select a product...</option>
+                                                    <t t-foreach="products" t-as="product">
+                                                        <option t-att-value="product.id"
+                                                            t-att-selected="review.product_id and review.product_id.id == product.id">
+                                                            <t t-esc="product.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="category_id">Category</label>
+                                                <select name="category_id" id="category_id"
+                                                    class="form-control">
+                                                    <option value="">Select a category...</option>
+                                                    <t t-foreach="categories" t-as="category">
+                                                        <option t-att-value="category.id"
+                                                            t-att-selected="review.category_id and review.category_id.id == category.id">
+                                                            <t t-esc="category.name" />
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="pros">Pros</label>
+                                                <textarea name="pros" id="pros" class="form-control"
+                                                    rows="3" t-text="review.pros or ''" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="cons">Cons</label>
+                                                <textarea name="cons" id="cons" class="form-control"
+                                                    rows="3" t-text="review.cons or ''" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-check">
+                                            <input type="checkbox" name="recommend" id="recommend"
+                                                class="form-check-input" value="on"
+                                                t-att-checked="review.recommend" />
+                                            <label for="recommend" class="form-check-label">
+                                                I would recommend this product/service
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <button type="submit" class="btn btn-primary">
+                                            Update Review
+                                        </button>
+                                        <a t-attf-href="/my/review/#{review.id}"
+                                            class="btn btn-secondary ml-2">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Portal Breadcrumb -->
+    <template id="portal_my_home_review" inherit_id="portal.portal_my_home" customize_show="True"
+        priority="40">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Reviews</t>
+                <t t-set="url" t-value="'/my/reviews'" />
+                <t t-set="placeholder_count" t-value="'review_count'" />
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,7 @@
+{
+  "ruff.configuration": {
+    "lint": {
+      "unfixable": ["F401"]
+    }
+  }
+}

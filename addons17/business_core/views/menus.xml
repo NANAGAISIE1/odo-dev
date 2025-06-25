@@ -1,0 +1,12 @@
+<odoo>
+    <menuitem id="menu_business_root" name="Business Management" />
+    <menuitem id="menu_businesses" name="Businesses" parent="menu_business_root"
+        action="action_business" />
+    <menuitem id="menu_business_preferences" name="Business Preferences" parent="menu_business_root"
+        action="action_business_preference" />
+    <menuitem id="menu__business_products" name="Business Products" parent="menu_business_root"
+        action="action_business_product" />
+    <menuitem id="menu_apps" name="Apps" parent="menu_business_root" action="action_app" />
+    <menuitem id="menu_app_categories" name="App Categories" parent="menu_business_root"
+        action="action_app_category" />
+</odoo>
