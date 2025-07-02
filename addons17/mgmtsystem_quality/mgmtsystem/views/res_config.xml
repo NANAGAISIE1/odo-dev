@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="view_mgmtsystem_configuration" model="ir.ui.view">
@@ -8,7 +8,7 @@
         <field name="priority" eval="95" />
         <field name="arch" type="xml">
 
-            <xpath expr="//div[hasclass('settings')]" position="inside">
+            <xpath expr="//form" position="inside">
                 <div
                     class="app_settings_block"
                     data-string="Management System"
@@ -89,7 +89,8 @@
                             <div class="o_setting_right_pane">
                                 <label for="module_mgmtsystem_action" />
                                 <div class="text-muted">
-                                    Manage immediate, corrective, and preventive actions and improvement opportunities
+                                    Manage immediate, corrective, and preventive actions and
+                                    improvement opportunities
                                 </div>
                             </div>
                         </div>
@@ -183,7 +184,8 @@
                             <div class="o_setting_right_pane">
                                 <label for="module_document_page_quality_manual" />
                                 <div class="text-muted">
-                                    Provide a Quality Manual template based on the ISO 9001:2008 standard
+                                    Provide a Quality Manual template based on the ISO 9001:2008
+                                    standard
                                 </div>
                             </div>
                         </div>
@@ -198,7 +200,8 @@
                             <div class="o_setting_right_pane">
                                 <label for="module_document_page_environment_manual" />
                                 <div class="text-muted">
-                                    Provide an Environment Manual template based on the ISO 14001:2004 standard
+                                    Provide an Environment Manual template based on the ISO
+                                    14001:2004 standard
                                 </div>
                             </div>
                         </div>
@@ -213,7 +216,8 @@
                             <div class="o_setting_right_pane">
                                 <label for="module_mgmtsystem_health_safety_manual" />
                                 <div class="text-muted">
-                                    Provide a Health &amp; Safety Manual template based on the OHSAS 18001 standard
+                                    Provide a Health &amp; Safety Manual template based on the OHSAS
+                                    18001 standard
                                 </div>
                             </div>
                         </div>
@@ -228,7 +232,8 @@
                             <div class="o_setting_right_pane">
                                 <label for="module_information_security_manual" />
                                 <div class="text-muted">
-                                    Provide an Information Security Manual template based on ISO 27001
+                                    Provide an Information Security Manual template based on ISO
+                                    27001
                                 </div>
                             </div>
                         </div>
@@ -267,7 +272,8 @@
                                     for="module_document_page_environmental_aspect"
                                 />
                                 <div class="text-muted">
-                                    Provide an Envioronmental Aspect documentation category and template
+                                    Provide an Envioronmental Aspect documentation category and
+                                    template
                                 </div>
                             </div>
                         </div>
