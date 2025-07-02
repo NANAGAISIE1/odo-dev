@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Management System - Audit",
-    "version": "16.0.1.0.1",
+    "version": "17.0.1.0.1",
     "author": "Savoir-faire Linux, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/management-system",
     "license": "AGPL-3",
@@ -22,4 +22,4 @@
         "wizard/copy_verification_lines.xml",
     ],
     "demo": ["demo/demo_audit.xml"],
-}
+} # type: ignore
