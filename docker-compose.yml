@@ -8,14 +8,16 @@ services:
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
     volumes:
-      - ./volumes/db/odoo17/data:/var/lib/postgresql/odoo17/data
+      - ./volumes/db/odoo17/data:/var/lib/postgresql/data
     ports:
       - 5435:5432
     networks:
       - odoo_network
+    profiles:
+      - odoo17
     healthcheck:
       test: [CMD-SHELL, pg_isready -U odoo -d odoo17]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
   odoo18_db:
@@ -25,14 +27,16 @@ services:
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: odoo
     volumes:
-      - ./volumes/db/odoo18/data:/var/lib/postgresql/odoo18/data
+      - ./volumes/db/odoo18/data:/var/lib/postgresql/data
     ports:
       - 5434:5432
     networks:
       - odoo_network
+    profiles:
+      - odoo18
     healthcheck:
       test: [CMD-SHELL, pg_isready -U odoo -d odoo18]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
 
@@ -46,7 +50,7 @@ services:
       HOST: odoo17_db
       USER: odoo
       PASSWORD: odoo
-    # command: odoo -d odoo17_db -i base --without-demo=all --stop-after-init
+    command: odoo -d odoo17 -i base --without-demo=all --dev=reload,qweb,werkzeug,xml
     volumes:
       - ./addons17:/mnt/extra-addons
       - ./config17:/etc/odoo
@@ -69,11 +73,11 @@ services:
       HOST: odoo18_db
       USER: odoo
       PASSWORD: odoo
+    command: odoo -d odoo18 -i base --without-demo=all --dev=reload,qweb,werkzeug,xml
     volumes:
       - ./addons18:/mnt/extra-addons
       - ./config18:/etc/odoo
       - ./volumes/odoo18:/var/lib/odoo
-    # command: odoo -d odoo18_db -i base --without-demo=all --stop-after-init
     ports:
       - 8070:8069
     networks:

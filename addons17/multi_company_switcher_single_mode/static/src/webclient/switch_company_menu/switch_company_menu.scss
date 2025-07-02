@@ -1,0 +1,14 @@
+.o_switch_company_menu {
+  .dropdown-item {
+    cursor: default;
+
+    & > div {
+      cursor: default;
+
+      .toggle_company {
+        pointer-events: none;
+        cursor: default;
+      }
+    }
+  }
+}
