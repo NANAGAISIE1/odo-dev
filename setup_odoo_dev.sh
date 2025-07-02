@@ -5,7 +5,7 @@ echo "Setting up Odoo Development Environment..."
 
 # Create project directory structure
 mkdir -p odoo-dev/{addons17,addons18,config17,config18}
-cd odoo-dev
+cd odoo-dev || exit
 
 # Create the docker-compose.yml file
 cat > docker-compose.yml << 'EOF'
@@ -57,10 +57,10 @@ create_sample_addon() {
     local version=$1
     local addon_dir="addons${version}/my_sample_addon"
     
-    mkdir -p "$addon_dir"
+    mkdir -p "${addon_dir}"
     
     # __manifest__.py
-    cat > "$addon_dir/__manifest__.py" << EOF
+    cat > "${addon_dir}/__manifest__.py" << EOF
 {
     'name': 'My Sample Addon',
     'version': '1.0',
@@ -77,18 +77,18 @@ create_sample_addon() {
 EOF
 
     # __init__.py
-    cat > "$addon_dir/__init__.py" << 'EOF'
+    cat > "${addon_dir}/__init__.py" << 'EOF'
 from . import models
 EOF
 
     # models/__init__.py
-    mkdir -p "$addon_dir/models"
-    cat > "$addon_dir/models/__init__.py" << 'EOF'
+    mkdir -p "${addon_dir}/models"
+    cat > "${addon_dir}/models/__init__.py" << 'EOF'
 from . import sample_model
 EOF
 
     # models/sample_model.py
-    cat > "$addon_dir/models/sample_model.py" << 'EOF'
+    cat > "${addon_dir}/models/sample_model.py" << 'EOF'
 from odoo import models, fields, api
 
 class SampleModel(models.Model):
@@ -104,8 +104,8 @@ class SampleModel(models.Model):
 EOF
 
     # views/sample_view.xml
-    mkdir -p "$addon_dir/views"
-    cat > "$addon_dir/views/sample_view.xml" << 'EOF'
+    mkdir -p "${addon_dir}/views"
+    cat > "${addon_dir}/views/sample_view.xml" << 'EOF'
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_sample_model_tree" model="ir.ui.view">
