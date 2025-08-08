@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_review_review" model="ir.sequence">
+        <field name="name">Review Reference</field>
+        <field name="code">review.review</field>
+        <field name="prefix">REV%(y)s</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

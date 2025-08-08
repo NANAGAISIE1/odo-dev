@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_review_response_template_tree" model="ir.ui.view">
+        <field name="name">review.response.template.list</field>
+        <field name="model">review.response.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_review_response_template_form" model="ir.ui.view">
+        <field name="name">review.response.template.form</field>
+        <field name="model">review.response.template</field>
+        <field name="arch" type="xml">
+            <form string="Response Template">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="active" />
+                        <field name="body" widget="html" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

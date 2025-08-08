@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_review_review_tree" model="ir.ui.view">
+        <field name="name">review.review.list</field>
+        <field name="model">review.review</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" />
+                <field name="listing_id" />
+                <field name="author_name" />
+                <field name="rating" />
+                <field name="sentiment" />
+                <field name="state" />
+                <field name="date" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_review_review_search" model="ir.ui.view">
+        <field name="name">review.review.search</field>
+        <field name="model">review.review</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="listing_id" />
+                <field name="author_name" />
+                <filter name="sentiment_positive" string="Positive"
+                    domain="[('sentiment','=','positive')]" />
+                <filter name="sentiment_negative" string="Negative"
+                    domain="[('sentiment','=','negative')]" />
+                <filter name="state_new" string="New" domain="[('state','=','new')]" />
+                <filter name="state_responded" string="Responded"
+                    domain="[('state','=','responded')]" />
+                <group expand="0" string="Group By">
+                    <filter name="group_listing" string="Listing"
+                        context="{'group_by': 'listing_id'}" />
+                    <filter name="group_platform" string="Platform"
+                        context="{'group_by': 'platform'}" />
+                    <filter name="group_sentiment" string="Sentiment"
+                        context="{'group_by': 'sentiment'}" />
+                    <filter name="group_state" string="State" context="{'group_by': 'state'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_review_review_form" model="ir.ui.view">
+        <field name="name">review.review.form</field>
+        <field name="model">review.review</field>
+        <field name="arch" type="xml">
+            <form string="Review">
+                <header>
+                    <button name="action_post_chatter_message" type="object" string="Notify"
+                        class="btn-primary" />
+                    <button name="write" type="object" string="Mark Responded"
+                        invisible="state == 'responded'"
+                        context="{'default_state':'responded'}" />
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="new,in_progress,responded,archived" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sequence" readonly="1" />
+                            <field name="listing_id" />
+                            <field name="platform" readonly="1" />
+                            <field name="author_name" />
+                            <field name="author_email" />
+                            <field name="rating" />
+                            <field name="sentiment" readonly="1" />
+                            <field name="date" />
+                        </group>
+                        <group>
+                            <field name="content" widget="html" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Responses">
+                            <field name="response_ids" context="{'default_review_id': active_id}">
+                                <list editable="bottom">
+                                    <field name="author_id" />
+                                    <field name="template_id" />
+                                    <field name="posted" />
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="author_id" />
+                                        <field name="template_id" />
+                                        <field name="body" widget="html" />
+                                    </group>
+                                    <footer>
+                                        <button name="action_send_response" type="object"
+                                            string="Send Response" class="btn-primary" />
+                                        <button string="Discard" class="btn-secondary"
+                                            special="cancel" />
+                                    </footer>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter>
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </chatter>
+            </form>
+        </field>
+    </record>
+</odoo>

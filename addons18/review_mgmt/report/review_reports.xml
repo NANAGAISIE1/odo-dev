@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_review_simple">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Review: <t t-esc="o.sequence" /></h2>
+                        <p>
+                            <strong>Listing:</strong>
+                            <t t-esc="o.listing_id.display_name" />
+                        </p>
+                        <p>
+                            <strong>Author:</strong>
+                            <t t-esc="o.author_name" />
+                        </p>
+                        <p>
+                            <strong>Rating:</strong>
+                            <t t-esc="o.rating" />
+                        </p>
+                        <div t-raw="o.content" />
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_review_simple" model="ir.actions.report">
+        <field name="name">Review (Simple)</field>
+        <field name="model">review.review</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">review_mgmt.report_review_simple</field>
+        <field name="report_file">review_mgmt.report_review_simple</field>
+    </record>
+</odoo>

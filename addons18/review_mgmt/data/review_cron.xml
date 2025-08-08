@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Placeholder cron for future integrations to fetch new reviews from platforms -->
+    <record id="ir_cron_review_fetch" model="ir.cron">
+        <field name="name">Fetch External Reviews</field>
+        <field name="model_id" ref="model_review_review" />
+        <field name="state">code</field>
+        <field name="code">model._cron_fetch_external_reviews()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+    </record>
+</odoo>

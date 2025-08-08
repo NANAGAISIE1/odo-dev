@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_review_review_graph" model="ir.ui.view">
+        <field name="name">review.review.graph</field>
+        <field name="model">review.review</field>
+        <field name="arch" type="xml">
+            <graph string="Review Trends" type="bar">
+                <field name="rating" type="measure" />
+                <field name="date" type="row" interval="month" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_review_review_pivot" model="ir.ui.view">
+        <field name="name">review.review.pivot</field>
+        <field name="model">review.review</field>
+        <field name="arch" type="xml">
+            <pivot string="Review KPIs">
+                <field name="rating" type="measure" />
+                <field name="platform" type="col" />
+                <field name="sentiment" type="row" />
+            </pivot>
+        </field>
+    </record>
+</odoo>
