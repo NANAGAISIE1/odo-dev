@@ -1,3 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import models
-from . import controllers
+
+# Ensure Odoo loads models and controllers
+from . import models #noqa
+from . import controllers #noqa

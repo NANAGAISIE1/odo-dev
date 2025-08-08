@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_review_user" model="res.groups">
+        <field name="name">Review User</field>
+        <field name="category_id" ref="base.module_category_marketing" />
+    </record>
+    <record id="group_review_manager" model="res.groups">
+        <field name="name">Review Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_review_user'))]" />
+        <field name="category_id" ref="base.module_category_marketing" />
+    </record>
+</odoo>
