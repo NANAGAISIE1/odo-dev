@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_review_root" name="Reviews" sequence="10"
-        groups="review_mgmt.group_review_user" />
+    <menuitem id="menu_review_root" name="Reviews" sequence="10" />
 
     <menuitem id="menu_review_listings" name="Listings" parent="review_mgmt.menu_review_root"
-        sequence="10" />
+        sequence="10" groups="review_mgmt.group_review_user" />
     <menuitem id="menu_review_reviews" name="Reviews" parent="review_mgmt.menu_review_root"
-        sequence="20" />
+        sequence="20" groups="review_mgmt.group_review_user" />
     <menuitem id="menu_review_settings" name="Configuration" parent="review_mgmt.menu_review_root"
         sequence="90" groups="review_mgmt.group_review_manager" />
 
