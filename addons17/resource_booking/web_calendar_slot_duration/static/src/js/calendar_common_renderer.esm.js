@@ -2,8 +2,8 @@
  * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). */
 
 // Odoo 17 uses CalendarRenderer (v18 refactored to CalendarCommonRenderer)
-import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
 import { patch } from "@web/core/utils/patch";
+import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
 
 patch(CalendarRenderer.prototype, {
     get options() {

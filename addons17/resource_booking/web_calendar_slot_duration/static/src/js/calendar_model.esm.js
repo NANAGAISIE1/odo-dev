@@ -3,8 +3,8 @@
  * License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). */
 
 // Odoo 17 calendar model path
+import { patch } from "@web/core/utils/patch";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
-import {patch} from "@web/core/utils/patch";
 
 patch(CalendarModel.prototype, {
     buildRawRecord(partialRecord, options = {}) {
