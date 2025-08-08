@@ -55,6 +55,14 @@ class ReviewCategory(models.Model):
         string="Website Sequence", default=10, help="Order on website"
     )
 
+    # Hierarchy
+    parent_id = fields.Many2one("review.category", string="Parent Category")
+
+    # Website SEO fields
+    website_meta_title = fields.Char(string="Website Meta Title")
+    website_meta_description = fields.Text(string="Website Meta Description")
+    website_meta_keywords = fields.Char(string="Website Meta Keywords")
+
     @api.depends("review_ids.rating", "review_ids.state")
     def _compute_review_stats(self):
         """Compute review statistics for each category."""
@@ -77,3 +85,18 @@ class ReviewCategory(models.Model):
         string="Reviews",
         help="Reviews in this category",
     )
+
+    def toggle_website_published(self):
+        for rec in self:
+            rec.website_published = not rec.website_published
+
+    def action_view_reviews(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Reviews"),
+            "res_model": "review.feedback",
+            "view_mode": "tree,form",
+            "domain": [("category_id", "=", self.id)],
+            "context": {"default_category_id": self.id},
+        }

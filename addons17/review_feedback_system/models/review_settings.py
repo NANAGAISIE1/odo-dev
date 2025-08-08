@@ -177,3 +177,9 @@ class ReviewSettings(models.TransientModel):
             "review_feedback_system.max_reviews_per_product",
             self.max_reviews_per_product_per_user,
         )
+
+
+class ReviewSettingsAlias(models.TransientModel):
+    _name = "review.settings"
+    _inherit = "res.config.settings"
+    _description = "Review Settings (Alias)"

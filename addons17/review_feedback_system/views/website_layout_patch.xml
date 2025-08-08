@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Guard website.layout against missing website.add_to_cart_action -->
+    <template id="website_layout_patch" inherit_id="website.layout"
+        name="Website Layout Patch (safe add_to_cart_action)">
+        <!-- Replace the t-set that injects data-add2cart-redirect with a safe version -->
+        <xpath expr="//t[@t-set='html_data' and contains(@t-value, 'data-add2cart-redirect')]"
+            position="replace">
+            <t t-if="'add_to_cart_action' in website">
+                <t t-set="html_data"
+                    t-value="dict(html_data, **{'data-add2cart-redirect': '1' if website.add_to_cart_action == 'stay' else '0' if website.add_to_cart_action == 'go_to_cart' else '2'})" />
+            </t>
+            <t t-else="">
+                <!-- Default to '2' (stay on page or default behavior) when website_sale isn't
+                installed -->
+                <t t-set="html_data" t-value="dict(html_data, **{'data-add2cart-redirect': '2'})" />
+            </t>
+        </xpath>
+    </template>
+</odoo>

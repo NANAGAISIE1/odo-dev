@@ -245,15 +245,19 @@ class ReviewController(http.Controller):
 
     def _handle_attachments(self, review, files):
         """Handle file attachments for review."""
+        import base64
+
         for file in files:
             if file.filename:
+                content = file.read()
+                b64 = base64.b64encode(content)
                 attachment = (
                     request.env["ir.attachment"]
                     .sudo()
                     .create(
                         {
                             "name": file.filename,
-                            "datas": file.read(),
+                            "datas": b64,
                             "res_model": "review.feedback",
                             "res_id": review.id,
                             "public": True,

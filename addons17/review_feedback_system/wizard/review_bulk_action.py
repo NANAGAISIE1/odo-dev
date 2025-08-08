@@ -21,6 +21,9 @@ class ReviewBulkAction(models.TransientModel):
 
     reason = fields.Text(string="Reason", help="Reason for this action (optional)")
 
+    # Optional flag used by tests; not functionally required
+    notify_customers = fields.Boolean(string="Notify Customers", default=False)
+
     @api.model
     def default_get(self, fields_list):
         """Set default values from context."""

@@ -42,6 +42,7 @@ This module enables businesses to:
         "security/ir.model.access.csv",
         "data/review_email_templates.xml",
         "data/review_cron_jobs.xml",
+        "views/website_layout_patch.xml",
         "views/review_views.xml",
         "views/review_category_views.xml",
         "views/review_analytics_views.xml",

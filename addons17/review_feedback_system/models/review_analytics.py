@@ -5,71 +5,51 @@ class ReviewAnalytics(models.Model):
     _name = "review.analytics"
     _description = "Review Analytics"
     _auto = False
-    _rec_name = "id"
 
     # Dimensions
-    review_id = fields.Many2one("review.feedback", string="Review")
-    partner_id = fields.Many2one("res.partner", string="Customer")
     product_id = fields.Many2one("product.template", string="Product")
     category_id = fields.Many2one("review.category", string="Category")
 
-    # Time dimensions
-    date = fields.Date(string="Date")
-    month = fields.Char(string="Month")
-    year = fields.Char(string="Year")
-    quarter = fields.Char(string="Quarter")
-
-    # Measures
-    rating = fields.Float(string="Rating")
-    rating_value = fields.Float(string="Rating Value")
-
-    # States
-    state = fields.Selection(
-        [
-            ("draft", "Draft"),
-            ("submitted", "Submitted"),
-            ("approved", "Approved"),
-            ("rejected", "Rejected"),
-            ("archived", "Archived"),
-        ],
-        string="Status",
-    )
-
-    website_published = fields.Boolean(string="Published on Website")
-    verified_purchase = fields.Boolean(string="Verified Purchase")
-    recommend = fields.Boolean(string="Would Recommend")
-
-    # Counts
-    review_count = fields.Integer(string="Review Count")
-    helpful_count = fields.Integer(string="Helpful Count")
+    # Aggregated measures
+    total_reviews = fields.Integer(string="Total Reviews")
+    average_rating = fields.Float(string="Average Rating")
+    five_star_count = fields.Integer(string="5★ Reviews")
+    four_star_count = fields.Integer(string="4★ Reviews")
+    three_star_count = fields.Integer(string="3★ Reviews")
+    two_star_count = fields.Integer(string="2★ Reviews")
+    one_star_count = fields.Integer(string="1★ Reviews")
+    published_reviews = fields.Integer(string="Published Reviews")
+    verified_reviews = fields.Integer(string="Verified Reviews")
+    total_helpfulness_votes = fields.Integer(string="Total Helpfulness Votes")
 
     def init(self):
-        """Initialize the view."""
+        """Create or replace the analytics SQL view (aggregated by product/category)."""
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(
-            """
-            CREATE VIEW %s AS (
+            f"""
+            CREATE VIEW {self._table} AS (
                 SELECT
-                    rf.id AS id,
-                    rf.id AS review_id,
-                    rf.partner_id,
+                    (COALESCE(rf.product_id, 0) * 1000000 + COALESCE(rf.category_id, 0))::BIGINT AS id,
                     rf.product_id,
                     rf.category_id,
-                    rf.create_date::date AS date,
-                    TO_CHAR(rf.create_date, 'YYYY-MM') AS month,
-                    TO_CHAR(rf.create_date, 'YYYY') AS year,
-                    TO_CHAR(rf.create_date, 'YYYY-Q') AS quarter,
-                    CAST(rf.rating AS FLOAT) AS rating,
-                    rf.rating_value,
-                    rf.state,
-                    rf.website_published,
-                    rf.verified_purchase,
-                    rf.recommend,
-                    1 AS review_count,
-                    rf.helpfulness_count AS helpful_count
+                    COUNT(*) AS total_reviews,
+                    AVG(CAST(rf.rating AS FLOAT)) AS average_rating,
+                    COUNT(*) FILTER (WHERE rf.rating = '5') AS five_star_count,
+                    COUNT(*) FILTER (WHERE rf.rating = '4') AS four_star_count,
+                    COUNT(*) FILTER (WHERE rf.rating = '3') AS three_star_count,
+                    COUNT(*) FILTER (WHERE rf.rating = '2') AS two_star_count,
+                    COUNT(*) FILTER (WHERE rf.rating = '1') AS one_star_count,
+                    COUNT(*) FILTER (WHERE rf.website_published) AS published_reviews,
+                    COUNT(*) FILTER (WHERE rf.verified_purchase) AS verified_reviews,
+                    COALESCE(SUM(rf.helpfulness_count), 0) AS total_helpfulness_votes
                 FROM review_feedback rf
                 WHERE rf.state IN ('approved', 'submitted', 'rejected')
+                GROUP BY rf.product_id, rf.category_id
             )
-        """
-            % self._table
+            """
         )
+
+    def update_analytics(self):
+        """Public method to refresh the SQL view."""
+        self.init()
+        return True

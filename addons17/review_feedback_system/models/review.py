@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -296,6 +297,112 @@ class Review(models.Model):
                 body=_("Review has been unpublished from website."),
                 message_type="notification",
             )
+
+    def toggle_website_published(self):
+        """Toggle website published status from stat button."""
+        for rec in self:
+            rec.website_published = not rec.website_published
+
+    # ---------------------------
+    # Cron helpers (called by ir.cron)
+    # ---------------------------
+    @api.model
+    def _cron_cleanup_old_reviews(self):
+        params = self.env["ir.config_parameter"].sudo()
+        try:
+            expiry_days = int(
+                params.get_param("review_feedback_system.review_expiry_days", 0)
+            )
+        except Exception:
+            expiry_days = 0
+        if expiry_days <= 0:
+            return True
+        cutoff = fields.Datetime.now() - timedelta(days=expiry_days)
+        old_reviews = self.search(
+            [("create_date", "<", cutoff), ("state", "in", ["draft", "rejected"])]
+        )
+        count = len(old_reviews)
+        if count:
+            old_reviews.unlink()
+            _logger.info("Deleted %d old reviews", count)
+        return True
+
+    @api.model
+    def _cron_auto_approve_verified(self):
+        params = self.env["ir.config_parameter"].sudo()
+        auto_approve_raw = str(
+            params.get_param("review_feedback_system.auto_approve_verified", "False")
+        ).lower()
+        auto_approve = auto_approve_raw in ("1", "true", "yes", "y")
+        if not auto_approve:
+            return True
+        try:
+            min_rating = float(
+                params.get_param("review_feedback_system.min_rating_publish", "1")
+            )
+        except Exception:
+            min_rating = 1.0
+        eligible = self.search(
+            [
+                ("state", "=", "submitted"),
+                ("verified_purchase", "=", True),
+                ("rating_value", ">=", min_rating),
+            ]
+        )
+        cnt = len(eligible)
+        for rec in eligible:
+            rec.action_approve()
+        if cnt:
+            _logger.info("Auto-approved %d verified purchase reviews", cnt)
+        return True
+
+    @api.model
+    def _cron_send_review_notifications(self):
+        params = self.env["ir.config_parameter"].sudo()
+        notify_raw = str(
+            params.get_param("review_feedback_system.notify_new_review", "True")
+        ).lower()
+        notify_enabled = notify_raw in ("1", "true", "yes", "y")
+        email_to = params.get_param("review_feedback_system.notification_email", "")
+        if not (notify_enabled and email_to):
+            return True
+        one_hour_ago = fields.Datetime.now() - timedelta(hours=1)
+        pending = self.search(
+            [
+                ("state", "=", "submitted"),
+                ("create_date", ">=", one_hour_ago),
+                ("message_ids", "=", False),
+            ]
+        )
+        if not pending:
+            return True
+        template = self.env.ref(
+            "review_feedback_system.email_template_new_review_notification", False
+        )
+        if not template:
+            return True
+        for rec in pending:
+            try:
+                template.with_context(email_to=email_to).send_mail(
+                    rec.id, force_send=True
+                )
+            except Exception as e:
+                _logger.warning(
+                    "Failed to send notification for review %s: %s", rec.id, e
+                )
+        return True
+
+    @api.model
+    def _cron_update_review_stats(self):
+        products = self.env["product.template"].search([("review_ids", "!=", False)])
+        if products:
+            products._compute_review_stats()
+            _logger.info("Updated review statistics for %d products", len(products))
+        categories = self.env["review.category"].search([("review_ids", "!=", False)])
+        if categories:
+            categories._compute_review_stats()
+            _logger.info("Updated review statistics for %d categories", len(categories))
+        return True
 
     def _send_notification_to_moderators(self):
         """Send notification to moderators when new review is submitted."""
